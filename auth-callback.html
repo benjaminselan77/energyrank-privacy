@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Returning to EnergyRank</title>
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0F1614;color:#EDF3F1;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:24px;box-sizing:border-box;text-align:center}
+  p{color:#B8C7C2}
+</style>
+</head>
+<body>
+  <div>
+    <h1>Returning to EnergyRank&hellip;</h1>
+    <p id="msg">If nothing happens, go back to the app.</p>
+  </div>
+<script>
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var back = params.get('return') || '';
+
+    // Only ever hand back to the EnergyRank app (or Expo Go while testing).
+    if (!/^(energyrank|exp):\/\//.test(back)) {
+      document.getElementById('msg').textContent = 'This link is not valid.';
+      return;
+    }
+
+    var extra = '';
+    var err = params.get('error_description') || params.get('error');
+    if (err) {
+      extra = (back.indexOf('?') === -1 ? '?' : '&') +
+        'error_description=' + encodeURIComponent(err);
+    }
+    var code = params.get('code');
+    if (code) {
+      extra += (back.indexOf('?') === -1 && !extra ? '?' : '&') +
+        'code=' + encodeURIComponent(code);
+    }
+
+    window.location.replace(back + extra + window.location.hash);
+  })();
+</script>
+</body>
+</html>
